@@ -78,7 +78,7 @@ def run_pipeline(file_path):
     final_df = df[list(output_structure.keys())].rename(columns=output_structure)
 
     output_dir = os.path.dirname(file_path)
-    output_file = os.path.join(output_dir, "Итоговый_анализ_ТЗ.xlsx") if output_dir else "Итоговый_анализ_ТЗ.xlsx"
+    output_file = os.path.join(output_dir, "Итоговый_анализ.xlsx") if output_dir else "Итоговый_анализ.xlsx"
 
     # Запись в Excel с использованием openpyxl-движка для последующего дизайна
     with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
