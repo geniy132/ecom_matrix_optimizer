@@ -1,18 +1,42 @@
-import json                                                           # Модуль для чтения файлов конфигурации JSON
+import os                                                             # Модуль файловой системы ОС
+import json                                                           # Модуль для чтения файлов JSON
+import sys                                                            # Системный модуль интерпретатора Python
 
 
 def load_business_config():
-    """Загружает параметры маржи, лимиты скорости и тексты из JSON."""
-    try:                                                              # Блок защиты от отсутствия файла настроек
-        with open("config.json", "r", encoding="utf-8") as f:         # Открываем файл конфигурации на чтение
-            return json.load(f)                                       # Десериализуем JSON в словарь Python
-    except Exception:                                                 # Фолбэк-заглушка на случай сбоя диска
-        return {                                                      # Возвращаем дефолтную структуру полей
-            "MARGIN_THRESHOLDS": {"HIGH": 15.0, "LOW": 12.0},         # Пороговые лимиты маржи бизнеса
-            "SPEED_MULTIPLIERS": {"DRIVER_FACTOR": 1.5},              # Коэффициент скорости драйверов матрицы
-            "RECOMMENDATIONS": {                                      # Текстовые шаблоны инсайтов матрицы
-                "DRIVER": "Драйвер.", "STAR": "Звезда.",              # Дефолтные короткие формулировки
-                "TURNOVER": "Оборот.", "WASTE": "Балласт.",           # Шаблоны для различных групп SKU
-                "STABLE": "Стабильная позиция."                       # Текст по умолчанию для стабильных
-            }                                                         # Завершение словаря фолбэк-шаблонов
-        }                                                             # Конец структуры дефолтных настроек
+    """Загружает конфигурацию из внешнего файла или встроенных ресурсов EXE."""
+    # Определяем базовый путь (учитываем временную папку распаковки PyInstaller)
+    if hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS                                      # Путь внутри изолированного EXE файла
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))         # Обычный путь в режиме скрипта .py
+
+    config_name = "config.json"
+    
+    # Попытка 1: Ищем внешний кастомный конфиг рядом с запущенным EXE-файлом
+    external_path = os.path.join(os.path.dirname(sys.executable if hasattr(sys, 'frozen') else __file__), config_name)
+    if os.path.exists(external_path):
+        try:
+            with open(external_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+
+    # Попытка 2: Если внешнего нет, берем встроенный дефолтный из памяти EXE
+    internal_path = os.path.join(base_path, config_name)
+    if os.path.exists(internal_path):
+        try:
+            with open(internal_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+
+    # Попытка 3: Жесткий фолбэк на случай полного отсутствия файлов на диске
+    return {
+        "MARGIN_THRESHOLDS": {"HIGH": 15.0, "LOW": 12.0},
+        "MENU_OPTIONS": {
+            "1": "Прогнозирование спроса и маржинальный аудит матрицы",
+            "2": "Агрегация объемов и выручки из журнала транзакций",
+            "3": "Продвинутый анализ промо-акции (Динамические периоды + Каннибализация)"
+        }
+    }
