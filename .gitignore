@@ -1,0 +1,8 @@
+build/
+dist/
+.mypy_cache/
+*.spec
+__pycache__/
+venv/
+.env
+.xlsx
