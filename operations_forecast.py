@@ -19,7 +19,7 @@ def get_next_3_months_info(last_date):
         if current_month > 12:                                        # Если вышли за рамки декабря —
             current_month = 1                                         # сбрасываем счетчик на январь
             current_year += 1                                         # увеличиваем счетчик текущего года
-        
+
         _, days_in_month = calendar.monthrange(current_year, current_month) # Находим длину месяца в днях
         label = f"Прогноз {ru_months[current_month]}, шт"             # Формируем красивое имя колонки отчета
         months_info.append((label, days_in_month))                    # Добавляем данные в список метаданных
@@ -49,7 +49,7 @@ class DemandForecastOperation:
             median_speed = 1.0                                        # Принудительный страховочный дефолт
 
         cfg = load_business_config()                                  # Читаем пороговые лимиты и правила из JSON
-        
+
         def get_recommendation(row):                                  # Вложенный метод построчных вердиктов робота
             m_pct = row["_calc_margin_pct"] * 100                     # Переводим долю маржи в проценты
             spd = row["Скорость_продаж_день"]                         # Извлекаем скорость текущего SKU матрицы
