@@ -31,7 +31,7 @@ ecom_matrix_optimizer/
 │
 ├── operations_forecast.py     # [Операция 1] Прогнозирование спроса, расчет коэффициентов и аудит матрицы
 ├── operations_transactions.py # [Операция 2] Агрегация штучных объемов и выручки по логам транзакций под список SKU
-└── operations_promo.py        # [Операция 3] Анализ промо-акций (американские даты ММ/ДД/ГГГГ, расчет Sales Lift и каннибализации)
+└── operations_promo.py        # [Операция 3] Анализ промо-акций (расчет Sales Lift и каннибализации)
 ```
 
 ### ⚙️ Описание ключевых аналитических сценариев
@@ -48,9 +48,11 @@ ecom_matrix_optimizer/
 ## 🚀 Инструкция по развертыванию и запуску
 
 ### Запуск из исходного кода:
-1. Клонируйте репозиторий, установите зависимости и запустите оркестратор:
+1. Клонируйте репозиторий, настройте виртуальное окружение, установите зависимости и запустите оркестратор:
    ```bash
-   git clone https://github.com
+   git clone https://github.com/geniy132/ecom_matrix_optimizer.git
+   python -m venv venv
+   source venv/Scripts/activate
    pip install -r requirements.txt
    python main.py
    ```
